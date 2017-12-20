@@ -45,7 +45,7 @@ namespace SocialNetwork.Web.Controllers
                 return NotFound();
             }
 
-            return View(this.eventService.Details(id));
+            return this.ViewOrNotFound(this.eventService.Details(id));
         }
 
         public IActionResult JointEvent(int id)

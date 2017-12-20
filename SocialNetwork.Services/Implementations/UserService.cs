@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
 using SocialNetwork.Data.Entities;
 using SocialNetwork.Services.Infrastructure;
@@ -115,20 +116,18 @@ namespace SocialNetwork.Services.Implementations
                 || u.UserName.ToLower().Contains(searchTerm.ToLower()))
                 && u.UserName != ServiceConstants.AdminUserName
                 && u.IsDeleted == false)
-                .ProjectTo<UserListModel>()
-                .ToList();
+                .ProjectTo<UserListModel>();
 
-            return users != null ? PaginatedList<UserListModel>.Create(users, pageIndex, pageSize) : null;
+            return users != null ? PaginatedList<UserListModel>.Create(users.AsNoTracking(), pageIndex, pageSize) : null;
         }
 
         public PaginatedList<UserListModel> All(int pageIndex, int pageSize)
         {
             var users = this.db.Users
                 .Where(u => u.UserName != ServiceConstants.AdminUserName && u.IsDeleted == false)
-                .ProjectTo<UserListModel>()
-                .ToList();
+                .ProjectTo<UserListModel>();
 
-            return users != null ? PaginatedList<UserListModel>.Create(users, pageIndex, pageSize) : null;
+            return users != null ? PaginatedList<UserListModel>.Create(users.AsNoTracking(), pageIndex, pageSize) : null;
         }
 
         public object GetUserFullName(string id)

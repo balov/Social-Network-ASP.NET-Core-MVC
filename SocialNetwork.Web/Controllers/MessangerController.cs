@@ -38,7 +38,7 @@ namespace SocialNetwork.Web.Controllers
 
             messangerModel.Messages = this.messangerService.AllByUserIds(User.GetUserId(), id, pageIndex ?? 1, PageSize);
 
-            return View(messangerModel);
+            return this.ViewOrNotFound(messangerModel);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
 using SocialNetwork.Data.Entities;
 using SocialNetwork.Services.Infrastructure.CustomDataStructures;
@@ -32,10 +33,9 @@ namespace SocialNetwork.Services.Implementations
                 .Messages
                 .Where(m => (m.SenderId == userId && m.ReceiverId == otherUserId) || (m.SenderId == otherUserId && m.ReceiverId == userId))
                 .OrderBy(m => m.DateSent)
-                .ProjectTo<MessageModel>()
-                .ToList();
+                .ProjectTo<MessageModel>();
 
-            return messages != null ? PaginatedList<MessageModel>.Create(messages, pageIndex, pageSize) : null;
+            return messages != null ? PaginatedList<MessageModel>.Create(messages.AsNoTracking(), pageIndex, pageSize) : null;
         }
 
         public void Create(string senderId, string receiverId, string text)

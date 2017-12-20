@@ -70,7 +70,6 @@ namespace SocialNetwork.Services.Implementations
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
                 .ProjectTo<PostModel>()
-                .ToList()
                 .OrderByDescending(p => p.Date);
 
             return posts != null ? PaginatedList<PostModel>.Create(posts, pageIndex, pageSize) : null;
@@ -99,10 +98,9 @@ namespace SocialNetwork.Services.Implementations
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.User)
                 .ProjectTo<PostModel>()
-                .ToList()
                 .OrderByDescending(p => p.Date);
 
-            return posts != null ? PaginatedList<PostModel>.Create(posts, pageIndex, pageSize) : null;
+            return posts != null ? PaginatedList<PostModel>.Create(posts.AsNoTracking(), pageIndex, pageSize) : null;
         }
 
         public bool UserIsAuthorizedToEdit(int postId, string userId) => this.db.Posts.Any(p => p.Id == postId && p.UserId == userId);

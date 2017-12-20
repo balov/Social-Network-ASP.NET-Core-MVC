@@ -54,12 +54,12 @@ namespace SocialNetwork.Web.Controllers
             if (string.IsNullOrEmpty(searchTerm))
             {
                 var users = this.userService.All(page ?? 1, PageSize);
-                return View(users);
+                return this.ViewOrNotFound(users);
             }
             else
             {
                 var users = this.userService.UsersBySearchTerm(searchTerm, page ?? 1, PageSize);
-                return View(users);
+                return this.ViewOrNotFound(users);
             }
         }
     }

@@ -37,7 +37,7 @@ namespace SocialNetwork.Web.Controllers
             if (CoreValidator.CheckIfStringIsNullOrEmpty(model.CommentText))
             {
                 ModelState.AddModelError(string.Empty, "You cannot submit an empty comment!");
-                return View(model);
+                return this.ViewOrNotFound(model);
             }
 
             this.commentService.Create(model.CommentText, User.GetUserId(), model.Id);

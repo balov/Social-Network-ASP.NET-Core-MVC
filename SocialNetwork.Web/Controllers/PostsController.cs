@@ -58,7 +58,7 @@ namespace SocialNetwork.Web.Controllers
                 Feeling = postInfo.Feeling
             };
 
-            return View(postFormModel);
+            return this.ViewOrNotFound(postFormModel);
         }
 
         [HttpPost]
@@ -92,7 +92,7 @@ namespace SocialNetwork.Web.Controllers
                 Feeling = postInfo.Feeling
             };
 
-            return View(postFormModel);
+            return this.ViewOrNotFound(postFormModel);
         }
 
         [HttpPost]
