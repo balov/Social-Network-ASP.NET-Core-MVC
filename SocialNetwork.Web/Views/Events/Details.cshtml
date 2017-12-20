@@ -1,0 +1,21 @@
+﻿@model EventModel
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 well text-center">
+        <div class="thumbnail">
+            <h4><strong>@Model.Title</strong></h4>
+            <img src="@Model.ImageUrl" alt="Event" class="img-responsive">
+            <p><strong>@Model.Location</strong></p>
+            <p>@Model.DateStarts.ToShortDateString()</p>
+            <p>@Model.Description</p>
+            <small class="text-left">Participants: @Model.ParticipantsCount</small>
+        </div>
+        <div class="row">
+            @if (!Model.ParticipantId.Contains(User.GetUserId()))
+            {
+                <a asp-controller="Events" asp-action="JointEvent" asp-route-id="@Model.Id" class="btn btn-primary">Going</a>
+            }
+
+            <a href='javascript:history.go(-1)' class="btn btn-default">Back</a>
+        </div>
+    </div>
+</div>

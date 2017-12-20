@@ -1,0 +1,54 @@
+﻿@model EmailModel
+@{
+    ViewData["Title"] = "Contact us";
+}
+
+<style>
+    body {
+        background-image: url("https://file.zbcdn.net/716/84716/162580_background_image.jpg?1476896052");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>   
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 well">
+            <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                <h2 class="text-center">@ViewData["Title"]</h2>
+                <h5 class="text-center">Please use the following form to send us an email.</h5>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Subject"></label>
+                    <input asp-for="Subject" class="form-control" />
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Message"></label>
+                    <input asp-for="Message" class="form-control" />
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-offset-1">
+                    <recaptcha />
+                </div>
+
+                <br />
+                <button type="submit" class="btn btn-primary btn-block">Send</button>
+            </form>
+            <h4 class="text-center" style="color:chartreuse">@ViewData["SuccessMessage"]</h4>
+        </div>
+    </div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial"),
+    <recaptcha-script />
+}

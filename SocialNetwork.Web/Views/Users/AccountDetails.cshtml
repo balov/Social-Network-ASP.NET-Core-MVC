@@ -1,0 +1,239 @@
+﻿@model UserAccountModel
+
+<div class="row">
+    <div class="col-sm-3 well text-center">
+        <div class="well">
+            <p><a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@Model.Id"><strong>@Model.FirstName @Model.LastName</strong></a></p>
+            <img src="@Model.ProfilePicture.ToRenderablePictureString()" class="img-circle" height="100" width="100" alt="ProfilePicture">
+        </div>
+        <div class="well">
+            <p><a href="#"><strong>Interests</strong></a></p>
+            <p>
+                <span class="label label-default">Softni</span>
+                <span class="label label-primary">W3Schools</span>
+                <span class="label label-success">Labels</span>
+                <span class="label label-info">Football</span>
+                <span class="label label-warning">Gaming</span>
+                <span class="label label-danger">Friends</span>
+            </p>
+        </div>
+        @if (ViewData[GlobalConstants.Authorization] == GlobalConstants.FullAuthorization)
+        {
+        <div class="well">
+            <p><a href="#"><strong>Friends</strong></a></p>
+            <p>
+                @if (Model.Friends.Any())
+                {
+                foreach (var friend in Model.Friends)
+                {
+                <div class="row">
+                    <a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@friend.Id">@friend.FullName</a>
+                </div>
+                }
+
+                }
+            </p>
+        </div>
+        @if (Model.FriendRequestReceived.Any(fr => fr.FriendRequestStatus == FriendRequestStatus.Pending))
+        {
+        <div class="alert alert-success fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            <p><strong>Hey!</strong></p>
+            You have new friend requests. Find out who.
+        </div>
+        foreach (var friendRequest in Model.FriendRequestReceived.Where(fr => fr.FriendRequestStatus == FriendRequestStatus.Pending))
+        {
+        <p>
+            <a asp-controller="Users"
+               asp-action="AccountDetails"
+               asp-route-id="@friendRequest.SenderId">
+                <strong>@friendRequest.SenderFullName</strong>
+            </a>
+        </p>
+        }
+        }
+        }
+    </div>
+    <div class="col-sm-6">
+        @if (ViewData[GlobalConstants.Authorization] == GlobalConstants.FullAuthorization)
+        {
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default text-left">
+                    <div class="panel-body">
+                        <p contenteditable="true">What do you think @(User.Identity.Name)?</p>
+                        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Posts" asp-action="Create">Create Post</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+        @if (Model.Posts.Any() && (ViewData[GlobalConstants.Authorization] == GlobalConstants.FullAuthorization || ViewData[GlobalConstants.Authorization] == GlobalConstants.FriendAuthorization))
+        {
+
+        var prevDisabled = !Model.Posts.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Posts.HasNextPage ? "disabled" : "";
+
+        @foreach (var post in Model.Posts)
+        {
+
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-2">
+                    <img src="@post.UserProfilePicture.ToRenderablePictureString()" class="img-circle pull-left" height="55" width="55" alt="Avatar">
+                </div>
+                <div class="col-sm-10 text-left">
+                    <div class="row"><a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@post.UserId"><strong>@post.UserFullName</strong></a> is feeling @post.Feeling.ToString()</div>
+                    <div class="row"><small>@post.Date.ToShortDateString()</small></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>@post.Text</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(post.Photo.ToRenderablePictureString()))
+            {
+
+            <div class="row">
+                <img src="@post.Photo.ToRenderablePictureString()" class="img-responsive" style="width: 100%" alt="Avatar">
+            </div>
+
+            }
+
+            @if (ViewData[GlobalConstants.Authorization] == GlobalConstants.FullAuthorization)
+            {
+            <div class="row">
+                <div class="col-sm-4">
+                    <a asp-controller="Posts" asp-action="Edit" asp-route-postId="@post.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-controller="Posts" asp-action="Delete" asp-route-postId="@post.Id" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+            }
+            else
+            {
+            <div class="row">
+                <div class="col-sm-4">
+                    <a asp-controller="Posts"
+                       asp-action="Like"
+                       asp-route-postId="@post.Id"
+                       asp-route-pageIndex="@Model.Posts.PageIndex"
+                       class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-thumbs-up"></span> Like
+                    </a>
+                    <a asp-controller="Comment" asp-action="Create" asp-route-postId="@post.Id" class="btn btn-default btn-sm">Comment</a>
+                </div>
+            </div>
+            }
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <small>@post.Likes Likes / @post.Comments.Count() Comments</small>
+                </div>
+            </div>
+            @if (post.Comments.Any())
+            {
+            <hr />
+            @Html.Partial("_PostComments", post.Comments)
+            }
+        </div>
+
+        }
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <a asp-controller="Users" asp-action="AccountDetails"
+                   asp-route-userId="@(Model.Id)"
+                   asp-route-page="@(Model.Posts.PageIndex - 1)"
+                   class="btn btn-default @prevDisabled">
+                    Previous
+                </a>
+                <a asp-controller="Users" asp-action="AccountDetails"
+                   asp-route-userId="@(Model.Id)"
+                   asp-route-page="@(Model.Posts.PageIndex + 1)"
+                   class="btn btn-default @nextDisabled">
+                    Next
+                </a>
+            </div>
+        </div>
+        }
+        else if (ViewData[GlobalConstants.Authorization] == GlobalConstants.NoAuthorization)
+        {
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h4>You must be friend with @Model.FirstName in order to see his posts!</h4>
+                </div>
+            </div>
+            <div class="row">
+                @if (Model.FriendRequestSent.Any(fr => fr.ReceiverId == User.GetUserId()))
+                {
+                <div class="col-sm-12 text-center">
+                    <a asp-controller="FriendRequests" asp-action="Accept"
+                       asp-route-senderId="@Model.Id"
+                       asp-route-receiverId="@User.GetUserId()" class="btn btn-success btn-sm">Accept Friend Request</a>
+                    <a asp-controller="FriendRequests" asp-action="Decline"
+                       asp-route-senderId="@Model.Id"
+                       asp-route-receiverId="@User.GetUserId()" class="btn btn-danger btn-sm">Decline Friend Request</a>
+                </div>
+
+                }
+                else if (Model.FriendRequestReceived.Any(fr => fr.SenderId == User.GetUserId()))
+                {
+                <div class="col-sm-12 text-center">
+                    <h4 style="color:darkolivegreen">Your friend request is @Model.FriendRequestReceived.FirstOrDefault(fr => fr.SenderId == User.GetUserId()).FriendRequestStatus.ToString()</h4>
+                </div>
+
+                }
+                else
+                {
+                <div class="col-sm-12 text-center">
+                    <a asp-controller="FriendRequests" asp-action="AddFriend"
+                       asp-route-senderId="@User.GetUserId()"
+                       asp-route-receiverId="@Model.Id" class="btn btn-primary btn-sm">Add Friend</a>
+                </div>
+
+                }
+            </div>
+        </div>
+        }
+        else
+        {
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h4>@Model.FirstName doesnt have any posts!</h4>
+                </div>
+            </div>
+        </div>
+
+        }
+    </div>
+    <div class="col-sm-3 well">
+        <div class="thumbnail">
+            <p class="text-center"><strong>Chat With Your Friends:</strong></p>
+            <img src="http://vectorlogo4u.com/wp-content/uploads/2015/10/Facebook-Messenger-vector-logo-720x340.png" alt="Messanger" width="400" height="300">
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                Social Network Messanger
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu text-center">
+                @if (Model.Friends.Any())
+                {
+                foreach (var friend in Model.Friends)
+                {
+                <li><a asp-controller="Messanger" asp-action="Index" asp-route-id="@friend.Id">@friend.FullName</a></li>
+                }
+                }
+                else
+                {
+                <li><a href="#">You need to have frinds!</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

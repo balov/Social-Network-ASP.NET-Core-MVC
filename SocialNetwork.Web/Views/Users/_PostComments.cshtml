@@ -1,0 +1,86 @@
+﻿@model List<CommentModel>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
+
+@if (Model.Count <= 2)
+{
+    @foreach (var comment in Model)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="@comment.UserProfilePicture.ToRenderablePictureString()" class="img-circle pull-left" height="40" width="40" alt="Avatar">
+            </div>
+            <div class="col-sm-10 text-left">
+                <div class="row">
+                    <a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@comment.UserId"><strong>@comment.UserFullName</strong></a>
+                    @comment.Text
+                </div>
+                <div class="row"><small>@comment.Date.ToShortDateString()</small></div>
+            </div>
+        </div>
+        <br />
+    }
+}
+else
+{
+    @for (int i = 0; i <= 1; i++)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="@Model[i].UserProfilePicture.ToRenderablePictureString()" class="img-circle pull-left" height="40" width="40" alt="Avatar">
+            </div>
+            <div class="col-sm-10 text-left">
+                <div class="row">
+                    <a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@Model[i].UserId"><strong>@Model[i].UserFullName</strong></a>
+                    @Model[i].Text
+                </div>
+                <div class="row"><small>@Model[i].Date.ToShortDateString()</small></div>
+            </div>
+        </div>
+        <br />
+    }
+    <div id="1" style="display:none">
+        @for (int i = 2; i <= Model.Count - 1; i++)
+        {
+            <div class="row">
+                <div class="col-sm-2">
+                    <img src="@Model[i].UserProfilePicture.ToRenderablePictureString()" class="img-circle pull-left" height="40" width="40" alt="Avatar">
+                </div>
+                <div class="col-sm-10 text-left">
+                    <div class="row">
+                        <a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@Model[i].UserId"><strong>@Model[i].UserFullName"</strong></a>
+                        @Model[i].Text
+                    </div>
+                    <div class="row"><small>@Model[i].Date.ToShortDateString()</small></div>
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+}
+
+@if (Model.Count > 2)
+{
+    <div class="row">
+        <button id="show" class="btn-group-sm btn-primary">More</button>
+        <button id="hide" class="btn-group-sm btn-primary">Hide</button>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#hide").click(function () {
+            $("#1").hide(500);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#show").click(function () {
+            $("#1").show(500);
+        });
+    });
+</script>
+
+

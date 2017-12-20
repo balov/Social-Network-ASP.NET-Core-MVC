@@ -1,0 +1,88 @@
+﻿@model PaginatedList<UserListModel>
+
+@{
+    ViewData["Title"] = "Search Users";
+}
+
+<h3 class="text-center">@ViewData["Title"]</h3>
+
+<div class="row">
+    <br />
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <form method="get">
+                    <div class="form-group">
+                        <strong>Find by Name or Username:</strong>  
+                        <input type="text" name="@GlobalConstants.SearchTerm" value="@ViewData[GlobalConstants.SearchTerm]" class="form-control" />
+                        <br />
+                        <div>
+                            <button type="submit" class="btn btn-primary">Search</button> |
+                            <a asp-action="Search">Back to Full List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        @if (Model.Any())
+            {
+
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+            @foreach (var user in Model)
+                {
+
+                <div class="well">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <img src="@user.ProfilePicture.ToRenderablePictureString()" class="img-circle pull-left" height="55" width="55" alt="Avatar">
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <div class="row">
+                                <a asp-controller="Users" asp-action="AccountDetails" asp-route-id="@user.Id"><strong>@user.FullName</strong></a>
+                            </div>
+                            <div class="row">
+                                Age: @user.Age
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-left">
+                            <div class="row">
+                                Number of Posts: @user.NumberOfPosts
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <a asp-controller="Users" asp-action="Search"
+                       asp-route-searchTerm="@ViewData[GlobalConstants.SearchTerm]"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       class="btn btn-default @prevDisabled">
+                        Previous
+                    </a>
+                    <a asp-controller="Users" asp-action="Search"
+                       asp-route-searchTerm="@ViewData[GlobalConstants.SearchTerm]"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       class="btn btn-default @nextDisabled">
+                        Next
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <h2>There are no user corresponding to your search!</h2>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
