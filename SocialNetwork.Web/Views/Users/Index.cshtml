@@ -10,12 +10,7 @@
         <div class="well">
             <p><a href="#"><strong>Interests</strong></a></p>
             <p>
-                <span class="label label-default">SoftUni</span>
-                <span class="label label-primary">W3Schools</span>
-                <span class="label label-success">Labels</span>
-                <span class="label label-info">Football</span>
-                <span class="label label-warning">Gaming</span>
-                <span class="label label-danger">Friends</span>
+                @Html.Partial("_UserInterests", Model.Interests)
             </p>
         </div>
     </div>
@@ -66,10 +61,10 @@
 
                     <div class="row">
                         <div class="col-sm-4">
-                            <a asp-controller="Posts" 
-                               asp-action="Like" 
-                               asp-route-postId="@post.Id" 
-                               asp-route-pageIndex="@Model.Posts.PageIndex" 
+                            <a asp-controller="Posts"
+                               asp-action="Like"
+                               asp-route-postId="@post.Id"
+                               asp-route-pageIndex="@Model.Posts.PageIndex"
                                class="btn btn-default btn-sm">
                                 <span class="glyphicon glyphicon-thumbs-up"></span> Like
                             </a>
@@ -120,24 +115,6 @@
         }
     </div>
     <div class="col-sm-3 well text-center">
-        @if (Model.Events.Any())
-        {
-            <p><strong>Upcoming Events</strong></p>
-            @foreach (var ev in Model.Events)
-            {
-                <div class="thumbnail">
-                    <p><strong>@ev.Title</strong></p>
-                    <img src="@ev.ImageUrl" alt="@ev.Title" width="400" height="300">
-                    <p><strong>@ev.Location</strong></p>
-                    <p>@ev.DateStarts.ToShortDateString()</p>
-                    <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" class="btn btn-primary">Info</a>
-                </div>
-            }
-
-        }
-
-        <div class="row">
-            <a asp-controller="Events" asp-action="Create" class="btn btn-primary">Create Event</a>
-        </div>
+        @Html.Partial("_UpcomingEvents", Model.Events)
     </div>
 </div>

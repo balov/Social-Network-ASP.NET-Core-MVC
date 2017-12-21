@@ -3,6 +3,7 @@ using SocialNetwork.Common.Mapping;
 using SocialNetwork.Data.Entities;
 using SocialNetwork.Services.Infrastructure.CustomDataStructures;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SocialNetwork.Services.Models
 {
@@ -28,11 +29,14 @@ namespace SocialNetwork.Services.Models
 
         public IEnumerable<EventModel> Events { get; set; } = new List<EventModel>();
 
+        public IEnumerable<string> Interests { get; set; } = new List<string>();
+
         public void ConfigureMapping(Profile profile)
         {
             profile.CreateMap<User, UserAccountModel>()
                 .ForMember(u => u.Posts, cfg => cfg.Ignore())
-                .ForMember(u => u.Friends, cfg => cfg.Ignore());
+                .ForMember(u => u.Friends, cfg => cfg.Ignore())
+                .ForMember(u => u.Interests, cfg => cfg.MapFrom(u => u.Interests.Select(i => i.Interest.Tag).ToList()));
         }
     }
 }

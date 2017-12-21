@@ -62,7 +62,13 @@ namespace SocialNetwork.Services.Implementations
             if (this.UserExists(userId))
             {
                 var userPosts = this.postService.PostsByUserId(userId, pageIndex, pageSize);
-                var userAccountModel = db.Users.Where(u => u.Id == userId).ProjectTo<UserAccountModel>().FirstOrDefault();
+                var userAccountModel = db
+                    .Users
+                    .Where(u => u.Id == userId)
+                    .Include(u => u.Interests)
+                    .ProjectTo<UserAccountModel>()
+                    .FirstOrDefault();
+
                 var friends = this.db
                     .UserFriend
                     .Where(u => u.UserId == userId && !u.Friend.IsDeleted)
@@ -94,7 +100,13 @@ namespace SocialNetwork.Services.Implementations
         {
             if (this.UserExists(userId))
             {
-                var userAccountModel = db.Users.Where(u => u.Id == userId).ProjectTo<UserAccountModel>().FirstOrDefault();
+                var userAccountModel = db
+                    .Users
+                    .Where(u => u.Id == userId)
+                    .Include(u => u.Interests)
+                    .ProjectTo<UserAccountModel>()
+                    .FirstOrDefault();
+
                 userAccountModel.Posts = this.postService.FriendPostsByUserId(userId, pageIndex, pageSize);
                 userAccountModel.Events = this.eventService.UpcomingThreeEvents();
 
