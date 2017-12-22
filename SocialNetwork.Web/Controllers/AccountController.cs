@@ -10,6 +10,7 @@ using SocialNetwork.Services;
 using SocialNetwork.Web.Models.AccountViewModels;
 using SocialNetwork.Web.Services;
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -265,7 +266,15 @@ namespace SocialNetwork.Web.Controllers
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
 
-                var user = new User { UserName = model.Email, Email = model.Email, ProfilePicture = new byte[] {1, 2, 3 } , FirstName = "FacebookLogedIn"};
+                var identifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var picture = $"https://graph.facebook.com/{identifier}/picture?type=large";
+
+                using (WebClient client = new WebClient())
+                {
+                    model.Picture = client.DownloadData(new Uri(picture));
+                }
+
+                var user = new User { UserName = model.Email, Email = model.Email, ProfilePicture = model.Picture , FirstName = model.Email};
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

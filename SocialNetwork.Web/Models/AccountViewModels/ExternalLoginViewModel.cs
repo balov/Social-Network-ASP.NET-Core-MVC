@@ -14,6 +14,6 @@ namespace SocialNetwork.Web.Models.AccountViewModels
 
         public string Name { get; set; }
 
-        public string Picture { get; set; }
+        public byte[] Picture { get; set; }
     }
 }

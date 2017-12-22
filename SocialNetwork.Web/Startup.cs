@@ -62,8 +62,6 @@ namespace SocialNetwork.Web
             {
                 fo.AppId = Configuration["Authentication:Facebook:AppId"];
                 fo.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                //fo.Scope.Add("public_profile");
-                //fo.Fields.Add("picture");
             });
         }
 
