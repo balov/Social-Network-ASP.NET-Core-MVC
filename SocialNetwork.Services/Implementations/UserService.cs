@@ -87,6 +87,7 @@ namespace SocialNetwork.Services.Implementations
 
                 userAccountModel.Posts = userPosts;
                 userAccountModel.Friends = friends;
+                userAccountModel.Events = this.eventService.UpcomingThreeEvents();
 
                 return userAccountModel;
             }

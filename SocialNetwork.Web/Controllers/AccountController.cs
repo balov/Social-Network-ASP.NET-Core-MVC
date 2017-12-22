@@ -264,7 +264,8 @@ namespace SocialNetwork.Web.Controllers
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
-                var user = new User { UserName = model.Email, Email = model.Email };
+
+                var user = new User { UserName = model.Email, Email = model.Email, ProfilePicture = new byte[] {1, 2, 3 } , FirstName = "FacebookLogedIn"};
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

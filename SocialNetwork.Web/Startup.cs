@@ -58,11 +58,13 @@ namespace SocialNetwork.Web
                 SecretKey = Configuration["Recaptcha:SecretKey"]
             });
 
-            //services.AddAuthentication().AddFacebook(fo =>
-            //{
-            //    fo.AppId = Configuration["Authentication:Facebook:AppId"];
-            //    fo.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //});
+            services.AddAuthentication().AddFacebook(fo =>
+            {
+                fo.AppId = Configuration["Authentication:Facebook:AppId"];
+                fo.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                //fo.Scope.Add("public_profile");
+                //fo.Fields.Add("picture");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

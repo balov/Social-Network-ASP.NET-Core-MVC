@@ -6,14 +6,14 @@ namespace SocialNetwork.Data.Entities
 {
     public class User : IdentityUser
     {
-        [MinLength(2), MaxLength(50)]
+        [MinLength(DataConstants.NameMinLength), MaxLength(DataConstants.NameMaxLength)]
         public string FirstName { get; set; }
 
-        [MinLength(2), MaxLength(50)]
+        [MinLength(DataConstants.NameMinLength), MaxLength(DataConstants.NameMaxLength)]
         public string LastName { get; set; }
 
         [Required]
-        [Range(12, 130)]
+        [Range(DataConstants.MinUserAge, DataConstants.MaxUserAge)]
         public int Age { get; set; }
 
         public bool IsDeleted { get; set; } = false;

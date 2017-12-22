@@ -211,28 +211,35 @@
         }
     </div>
     <div class="col-sm-3 well">
-        <div class="thumbnail">
-            <p class="text-center"><strong>Chat With Your Friends:</strong></p>
-            <img src="http://vectorlogo4u.com/wp-content/uploads/2015/10/Facebook-Messenger-vector-logo-720x340.png" alt="Messanger" width="400" height="300">
-        </div>
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                Social Network Messanger
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu text-center">
-                @if (Model.Friends.Any())
+        @if (ViewData[GlobalConstants.Authorization] == GlobalConstants.FullAuthorization)
+        {
+            <div class="thumbnail">
+                <p class="text-center"><strong>Chat With Your Friends:</strong></p>
+                <img src="http://vectorlogo4u.com/wp-content/uploads/2015/10/Facebook-Messenger-vector-logo-720x340.png" alt="Messanger" width="400" height="300">
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Social Network Messanger
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu text-center">
+                    @if (Model.Friends.Any())
                 {
                     foreach (var friend in Model.Friends)
                     {
-                        <li><a asp-controller="Messanger" asp-action="Index" asp-route-id="@friend.Id">@friend.FullName</a></li>
+                            <li><a asp-controller="Messanger" asp-action="Index" asp-route-id="@friend.Id">@friend.FullName</a></li>
+                        }
                     }
-                }
-                else
-                {
-                    <li><a href="#">You need to have frinds!</a></li>
-                }
-            </ul>
-        </div>
+                    else
+                    {
+                        <li><a href="#">You need to have frinds!</a></li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            @Html.Partial("_UpcomingEvents", Model.Events)
+        }
     </div>
 </div>
